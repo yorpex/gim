@@ -1,4 +1,6 @@
 import { Gim } from "@/components/gim";
+import { Cookies } from "@/components/owns/cookies";
+import { UserCard } from "@/components/owns/user-card";
 import { Yorpex } from "@/components/yorpex";
 import Link from "next/link";
 
@@ -15,7 +17,8 @@ export default function HomePage() {
         </h2>
       </header>
       <main className="flex min-h-[40vh] w-full max-w-screen-lg flex-col">
-        {/* <CookiesComponent /> */}
+        <UserCard />
+        <Cookies />
       </main>
       <footer className="flex w-full items-center justify-between px-8 pb-8">
         <div className="inline-flex items-center font-mono text-sm text-foreground/40">
