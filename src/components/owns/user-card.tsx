@@ -1,112 +1,128 @@
 "use client";
 
+import dayjs from "dayjs";
+import "dayjs/locale/pt-br";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   ContextMenu,
-  ContextMenuCheckboxItem,
   ContextMenuContent,
   ContextMenuItem,
-  ContextMenuLabel,
-  ContextMenuRadioGroup,
-  ContextMenuRadioItem,
   ContextMenuSeparator,
   ContextMenuShortcut,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "../ui/context-menu";
+dayjs.extend(relativeTime);
+dayjs.locale("pt-br");
 
 export function UserCard() {
+  const [open, setOpen] = useState<boolean | "closing">(false);
+  const [contextOpen, setContextOpen] = useState(false);
+  const ref = useRef<HTMLAnchorElement>(null);
+
   return (
-    <section
-      id="user-card"
-      className="flex min-h-[70vh] w-full items-start justify-center space-x-32"
+    <ContextMenu
+      onOpenChange={(openChanged) => {
+        setContextOpen(openChanged);
+        setOpen(openChanged);
+        if (openChanged === false && ref !== null) {
+          setOpen("closing");
+          setContextOpen(false);
+          ref.current?.blur();
+        }
+      }}
     >
-      <div className="w-96 space-y-4">
-        <div className="space-y-6">
-          <h2>User Card</h2>
-          <p className="text-foreground-500 text-sm">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae hic,
-            deleniti dignissimos doloremque aut natus nulla perspiciatis
-            perferendis cum dolorem?
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <span className="rounded-md bg-accent p-1.5 px-2 text-xs">react</span>
-          <span className="rounded-md bg-accent p-1.5 px-2 text-xs">
-            tailwindcss
-          </span>
-        </div>
-      </div>
-      <div className="relative flex h-full min-h-96 w-full items-center justify-center rounded-lg border">
-        <ContextMenu>
-          <ContextMenuTrigger>
-            <Link
-              href={"#user-card"}
-              className="group relative flex h-24 w-24 cursor-pointer flex-col items-center justify-center rounded-lg border outline-none transition-all hocus:w-48 hocus:border-dashed"
-            >
-              <Avatar className="absolute left-6 top-3 size-12 transition-all duration-300 group-hocus:left-4 group-hocus:top-6">
-                <AvatarImage src="https://github.com/trylooney.png" />
-                <AvatarFallback>FD</AvatarFallback>
-              </Avatar>
-              <div className="absolute top-10 transition-all duration-300 group-hocus:right-6 group-hocus:top-6">
-                <p className="text-sm font-medium opacity-0 transition-all delay-100 duration-75 group-hocus:opacity-100">
-                  Luis Felipe
-                </p>
-                <span className="text-sm text-foreground/50 transition-all">
-                  @felipesdev
-                </span>
-              </div>
-            </Link>
-          </ContextMenuTrigger>
-          <ContextMenuContent className="w-64">
-            <ContextMenuItem inset>
-              Back
-              <ContextMenuShortcut>⌘[</ContextMenuShortcut>
-            </ContextMenuItem>
-            <ContextMenuItem inset disabled>
-              Forward
-              <ContextMenuShortcut>⌘]</ContextMenuShortcut>
-            </ContextMenuItem>
-            <ContextMenuItem inset>
-              Reload
-              <ContextMenuShortcut>⌘R</ContextMenuShortcut>
-            </ContextMenuItem>
-            <ContextMenuSub>
-              <ContextMenuSubTrigger inset>More Tools</ContextMenuSubTrigger>
-              <ContextMenuSubContent className="w-48">
-                <ContextMenuItem>
-                  Save Page As...
-                  <ContextMenuShortcut>⇧⌘S</ContextMenuShortcut>
-                </ContextMenuItem>
-                <ContextMenuItem>Create Shortcut...</ContextMenuItem>
-                <ContextMenuItem>Name Window...</ContextMenuItem>
-                <ContextMenuSeparator />
-                <ContextMenuItem>Developer Tools</ContextMenuItem>
-              </ContextMenuSubContent>
-            </ContextMenuSub>
-            <ContextMenuSeparator />
-            <ContextMenuCheckboxItem checked>
-              Show Bookmarks Bar
-              <ContextMenuShortcut>⌘⇧B</ContextMenuShortcut>
-            </ContextMenuCheckboxItem>
-            <ContextMenuCheckboxItem>Show Full URLs</ContextMenuCheckboxItem>
-            <ContextMenuSeparator />
-            <ContextMenuRadioGroup value="pedro">
-              <ContextMenuLabel inset>People</ContextMenuLabel>
-              <ContextMenuSeparator />
-              <ContextMenuRadioItem value="pedro">
-                Pedro Duarte
-              </ContextMenuRadioItem>
-              <ContextMenuRadioItem value="colm">
-                Colm Tuite
-              </ContextMenuRadioItem>
-            </ContextMenuRadioGroup>
-          </ContextMenuContent>
-        </ContextMenu>
-      </div>
-    </section>
+      <ContextMenuTrigger>
+        <Link
+          ref={ref}
+          href={"#user-card"}
+          onMouseEnter={() => {
+            setOpen(true);
+          }}
+          onMouseLeave={() => {
+            if (contextOpen) return;
+            setOpen(false);
+          }}
+          onFocus={() => {
+            if (open === "closing") return setOpen(false);
+            setOpen(true);
+          }}
+          onBlur={() => {
+            if (contextOpen) return;
+            setOpen(false);
+          }}
+          data-state={open ? "open" : "closed"}
+          className="group relative flex h-16 w-44 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[5rem] border outline-none transition-all duration-300 data-[state=open]:h-40 data-[state=open]:rounded-3xl data-[state=open]:border-dashed"
+        >
+          <div>
+            <Avatar className="absolute left-5 top-3 size-10 transition-all duration-300 group-data-[state=open]:top-6">
+              <AvatarImage src="https://github.com/trylooney.png" />
+              <AvatarFallback>FD</AvatarFallback>
+            </Avatar>
+            <div className="absolute -top-1 right-5 transition-all duration-300 group-data-[state=open]:top-6">
+              <p className="-translate-y-4 text-sm font-medium opacity-0 transition-all delay-100 duration-75 group-data-[state=open]:translate-y-0 group-data-[state=open]:opacity-100">
+                Luis Felipe
+              </p>
+              <span className="text-sm text-foreground/50 transition-all">
+                @felipesdev
+              </span>
+            </div>
+          </div>
+          <div className="relative left-8 mt-12 w-full opacity-0 transition-all delay-75 duration-200 group-data-[state=open]:left-0 group-data-[state=open]:opacity-100">
+            <span className="ml-4 text-sm text-muted-foreground">
+              Membro •{" "}
+              <time className="text-foreground">
+                {dayjs(new Date(2024, 3, 6, 0, 0, 0, 0)).fromNow()}
+              </time>
+            </span>
+            <span className="ml-4 flex items-center space-x-1 text-sm">
+              <div className="size-4 rounded-full bg-gradient-to-bl from-blue-600 to-rose-400"></div>
+              <span>Developer</span>
+            </span>
+          </div>
+        </Link>
+      </ContextMenuTrigger>
+      <ContextMenuContent className="w-64">
+        <ContextMenuItem
+          inset
+          id="profile"
+          onClick={() => toast("profile triggered")}
+        >
+          Perfil
+        </ContextMenuItem>
+        <ContextMenuItem
+          inset
+          id="posts"
+          onClick={() => toast("posts triggered")}
+        >
+          Postagens
+        </ContextMenuItem>
+        <ContextMenuSeparator />
+        <ContextMenuItem
+          id="add-friend"
+          inset
+          onClick={() => toast("add-friend triggered")}
+        >
+          Adicionar
+        </ContextMenuItem>
+        <ContextMenuItem
+          id="report"
+          inset
+          onClick={() => toast("report triggered")}
+        >
+          Denunciar
+          <ContextMenuShortcut>
+            <AlertTriangle className="size-4" />
+          </ContextMenuShortcut>
+        </ContextMenuItem>
+        <ContextMenuItem inset disabled>
+          Feedback
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 }
