@@ -45,7 +45,7 @@ export function Cookies() {
                 className="group h-8 w-8 rounded-full"
                 variant={"ghost"}
               >
-                <Settings className="size-5 transition duration-700 group-hocus:rotate-180" />
+                <Settings className="size-5 transition duration-700 group-focus:rotate-180 group-hover:rotate-180" />
               </Button>
             </DialogTrigger>
             <DialogContent>
