@@ -17,8 +17,7 @@ export function Toolbar() {
   return (
     <div className="flex items-center justify-center">
       <div className="fixed bottom-5 z-20 inline-flex items-center space-x-2 overflow-hidden rounded-full border bg-background px-4 py-2 pr-2">
-        <div className="text-foreground-500 text-sm">0 componentes</div>
-        {/* <Divider orientation="vertical" className="h-5" /> */}
+        <div className="text-foreground-500 ml-1 text-sm">2 componentes</div>
         <div className="inline-flex items-center space-x-1">
           <TooltipProvider>
             <Tooltip>
@@ -47,8 +46,11 @@ export function Toolbar() {
                   href={"https://yorpex.com"}
                   target="_blank"
                   className={cn(
-                    "rounded-full",
-                    buttonVariants({ size: "icon", variant: "ghost" }),
+                    buttonVariants({
+                      className: "rounded-full",
+                      size: "icon",
+                      variant: "ghost",
+                    }),
                   )}
                 >
                   <Yorpex className="size-4" />

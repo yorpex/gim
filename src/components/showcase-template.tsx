@@ -34,7 +34,7 @@ export function ShowcaseTemplate({
           ))}
         </div>
       </div>
-      <div className="relative flex h-full min-h-96 w-full items-center justify-center rounded-lg border">
+      <div className="relative flex h-full min-h-96 w-full items-center justify-center overflow-hidden rounded-lg border">
         {children}
       </div>
     </section>
